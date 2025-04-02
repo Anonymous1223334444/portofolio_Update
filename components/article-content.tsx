@@ -2,52 +2,19 @@
 
 import { useState, useEffect } from "react"
 import ReactMarkdown from "react-markdown"
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
-
+import dynamic from 'next/dynamic'
 // Create a client-side only component for syntax highlighting
-const ClientSideSyntaxHighlighter = ({ language, children }: { language: string; children: string }) => {
-  const [SyntaxHighlighter, setSyntaxHighlighter] = useState<any>(null)
-  const [highlighterStyle, setHighlighterStyle] = useState<any>(null)
-  const [isLoading, setIsLoading] = useState(true)
-
-  useEffect(() => {
-    // Load both the highlighter and style only on client
-    const loadHighlighter = async () => {
-      try {
-        // Import the syntax highlighter
-        const highlighterModule = await import("react-syntax-highlighter")
-        // Import the style
-        const styleModule = await import("react-syntax-highlighter/dist/cjs/styles/prism")
-
-        setSyntaxHighlighter(() => highlighterModule.Prism)
-        setHighlighterStyle(styleModule.atomDark)
-        setIsLoading(false)
-      } catch (error) {
-        console.error("Failed to load syntax highlighter:", error)
-        setIsLoading(false)
-      }
-    }
-
-    loadHighlighter()
-  }, [])
-
-  // Show a simple placeholder while loading
-  if (isLoading || !SyntaxHighlighter) {
-    return (
+const ClientSideSyntaxHighlighter = dynamic(
+  () => import('./syntax-highlighter').then((mod) => mod.ClientSideSyntaxHighlighter),
+  {
+    ssr: false,
+    loading: () => (
       <pre className="bg-gray-800 text-gray-200 p-4 rounded overflow-x-auto">
-        <code>{children}</code>
-      </pre>
+        <code>Loading syntax highlighter...</code>
+      </pre>  
     )
   }
-
-  // Render the actual syntax highlighter once loaded
-  return (
-    <SyntaxHighlighter style={highlighterStyle} language={language} PreTag="div">
-      {String(children).replace(/\n$/, "")}
-    </SyntaxHighlighter>
-  )
-}
+)
 
 export function ArticleContent({ content }: { content: string }) {
   const components = {

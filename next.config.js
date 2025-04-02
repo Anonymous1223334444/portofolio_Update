@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {
+const withTM = require('next-transpile-modules')(['react-syntax-highlighter']);
+const nextConfig = withTM({
   transpilePackages: ['react-syntax-highlighter'],
   swcMinify: true,
   webpack: (config) => {
@@ -21,6 +22,6 @@ const nextConfig = {
     NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
     NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
   },
-}
+})
 
 module.exports = nextConfig
