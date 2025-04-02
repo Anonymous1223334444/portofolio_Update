@@ -8,6 +8,10 @@ const nextConfig = {
       ...config.resolve.fallback,
       fs: false 
     };
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      'react-syntax-highlighter': 'react-syntax-highlighter/dist/esm'
+    };
     return config;
   },
   reactStrictMode: true,
