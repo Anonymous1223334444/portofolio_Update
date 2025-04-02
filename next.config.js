@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const withTM = require('next-transpile-modules')(['react-syntax-highlighter']);
 const nextConfig = withTM({
+  reactStrictMode: true,
   transpilePackages: ['react-syntax-highlighter'],
   swcMinify: true,
   webpack: (config) => {
